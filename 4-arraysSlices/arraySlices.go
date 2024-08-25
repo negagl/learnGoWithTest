@@ -8,11 +8,24 @@ func Sum(numbers []int) (sum int) {
 	return
 }
 
-func SumAll(numbers ...[]int) []int {
+func SumAll(numbersToAdd ...[]int) []int {
 	var sums []int
-	for _, nums := range numbers {
+	for _, nums := range numbersToAdd {
 		sums = append(sums, Sum(nums))
 	}
 
+	return sums
+}
+
+func SumAllTails(numbersToAdd ...[]int) []int {
+	var sums []int
+	for _, nums := range numbersToAdd {
+		if len(nums) == 0 {
+			sums = append(sums, 0)
+			} else {
+				tail := nums[1:]
+				sums = append(sums, Sum(tail))
+			}
+	}
 	return sums
 }
