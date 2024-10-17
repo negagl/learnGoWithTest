@@ -6,28 +6,6 @@ import (
 
 // make a Wallet struct which lets us deposit Bitcoin
 func TestWallet(t *testing.T) {
-	assertBalance := func(tb testing.TB, wallet Wallet, want Bitcoin) {
-		tb.Helper()
-
-		got := wallet.Balance()
-
-		if got != want {
-			tb.Errorf("got %s want %s", got, want)
-		}
-	}
-
-	assertError := func(tb testing.TB, got error, want string) {
-		tb.Helper()
-
-		if got == nil {
-			tb.Fatal("didnt get an error but wanted one")
-		}
-
-		if got.Error() != want {
-			tb.Errorf("got %q want %q", got, want)
-		}
-	}
-
 	t.Run("Deposit", func(t *testing.T) {
 		wallet := Wallet{}
 		wallet.Deposit(Bitcoin(10))
@@ -48,4 +26,26 @@ func TestWallet(t *testing.T) {
 		assertError(t, err, "cannot withdraw, insufficient funds")
 		assertBalance(t, wallet, startingAmount)
 	})
+}
+
+func assertBalance(tb testing.TB, wallet Wallet, want Bitcoin) {
+	tb.Helper()
+
+	got := wallet.Balance()
+
+	if got != want {
+		tb.Errorf("got %s want %s", got, want)
+	}
+}
+
+func assertError(tb testing.TB, got error, want string) {
+	tb.Helper()
+
+	if got == nil {
+		tb.Fatal("didnt get an error but wanted one")
+	}
+
+	if got.Error() != want {
+		tb.Errorf("got %q want %q", got, want)
+	}
 }
