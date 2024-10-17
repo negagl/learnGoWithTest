@@ -1,37 +1,13 @@
 package pointers
 
-import (
-	"errors"
-	"fmt"
-)
-
-type Bitcoin int
-
 type Wallet struct {
-	balance Bitcoin
+	balance int
 }
 
-func (w *Wallet) Deposit(amount Bitcoin) {
+func (w *Wallet) Deposit(amount int) {
 	w.balance += amount
 }
 
-func (w *Wallet) Withdraw(amount Bitcoin) error {
-	if amount >= w.balance {
-		return errors.New("cannot withdraw, insufficient funds")
-	}
-
-	w.balance -= amount
-	return nil
-}
-
-func (w *Wallet) Balance() Bitcoin {
+func (w *Wallet) Balance() int {
 	return w.balance
-}
-
-type Stringer interface {
-	String() string
-}
-
-func (b Bitcoin) String() string {
-	return fmt.Sprintf("%d BTC", b)
 }
