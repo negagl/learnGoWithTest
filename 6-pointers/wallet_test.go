@@ -1,8 +1,11 @@
 package pointers
 
 import (
+	"errors"
 	"testing"
 )
+
+var WithdrawErrorMsg = errors.New("cannot withdraw, insufficient funds")
 
 // make a Wallet struct which lets us deposit Bitcoin
 func TestWallet(t *testing.T) {
@@ -12,9 +15,11 @@ func TestWallet(t *testing.T) {
 		assertBalance(t, wallet, Bitcoin(10))
 	})
 
-	t.Run("Withdraw", func(t *testing.T) {
+	t.Run("Withdraw with funds", func(t *testing.T) {
 		wallet := Wallet{balance: Bitcoin(100)}
-		wallet.Withdraw(Bitcoin(110))
+		err := wallet.Withdraw(Bitcoin(110))
+
+		assertError(t, err, WithdrawErrorMsg)
 		assertBalance(t, wallet, Bitcoin(100))
 	})
 
@@ -23,7 +28,7 @@ func TestWallet(t *testing.T) {
 		wallet := Wallet{balance: startingAmount}
 		err := wallet.Withdraw(Bitcoin(110))
 
-		assertError(t, err, "cannot withdraw, insufficient funds")
+		assertError(t, err, WithdrawErrorMsg)
 		assertBalance(t, wallet, startingAmount)
 	})
 }
@@ -38,14 +43,14 @@ func assertBalance(tb testing.TB, wallet Wallet, want Bitcoin) {
 	}
 }
 
-func assertError(tb testing.TB, got error, want string) {
+func assertError(tb testing.TB, got, want error) {
 	tb.Helper()
 
 	if got == nil {
 		tb.Fatal("didnt get an error but wanted one")
 	}
 
-	if got.Error() != want {
+	if !errors.Is(got, want) {
 		tb.Errorf("got %q want %q", got, want)
 	}
 }
