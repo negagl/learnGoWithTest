@@ -39,6 +39,24 @@ func TestSearch(t *testing.T) {
 
 		assertError(t, err, ErrAlreadyExists)
 	})
+
+	t.Run("update definition", func(t *testing.T) {
+		keyToChange := "test"
+		changedDefinition := "new definition"
+		_ = dictionary.Update(keyToChange, changedDefinition)
+
+		def, _ := dictionary.Search(keyToChange)
+
+		assertStrings(t, def, changedDefinition)
+	})
+
+	t.Run("update definition unknown word", func(t *testing.T) {
+		keyToChange := "tes"
+		changedDefinition := "new definition"
+		err := dictionary.Update(keyToChange, changedDefinition)
+
+		assertError(t, err, ErrNotFound)
+	})
 }
 
 func assertStrings(t testing.TB, got, want string) {
