@@ -27,11 +27,17 @@ func TestSearch(t *testing.T) {
 	t.Run("add word", func(t *testing.T) {
 		addedKey := "car"
 		addedDefinition := "vehicle to transport"
-		dictionary.Add(addedKey, addedDefinition)
+		_ = dictionary.Add(addedKey, addedDefinition)
 
 		def, _ := dictionary.Search("car")
 
 		assertStrings(t, def, addedDefinition)
+	})
+
+	t.Run("add existing word", func(t *testing.T) {
+		err := dictionary.Add("test", "this might fail")
+
+		assertError(t, err, ErrAlreadyExists)
 	})
 }
 
